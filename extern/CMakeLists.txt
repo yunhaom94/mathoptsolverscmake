@@ -49,7 +49,7 @@ if(WIN32)
     target_include_directories(MathOptSolversCMake_osi INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
     target_compile_options(MathOptSolversCMake_osi INTERFACE
-        /MT)
+        /MD)
     target_link_directories(MathOptSolversCMake_osi INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
     target_link_libraries(MathOptSolversCMake_osi INTERFACE
@@ -107,7 +107,7 @@ if(WIN32)
     target_include_directories(MathOptSolversCMake_coinutils INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/include")
     target_compile_options(MathOptSolversCMake_coinutils INTERFACE
-        /MT)
+        /MD)
     target_link_directories(MathOptSolversCMake_coinutils INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/lib")
     target_link_libraries(MathOptSolversCMake_coinutils INTERFACE
