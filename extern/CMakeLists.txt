@@ -106,7 +106,7 @@ if(WIN32)
         TEST_COMMAND "")
     target_include_directories(MathOptSolversCMake_coinutils INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/include")
-    target_compile_option(MathOptSolversCMake_coinutils INTERFACE
+    target_compile_options(MathOptSolversCMake_coinutils INTERFACE
         /MT)
     target_link_directories(MathOptSolversCMake_coinutils INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/lib")
