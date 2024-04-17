@@ -48,7 +48,7 @@ if(WIN32)
         TEST_COMMAND "")
     target_include_directories(MathOptSolversCMake_osi INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
-    target_compile_options(MathOptSolversCMake_coinutils INTERFACE
+    target_compile_options(MathOptSolversCMake_osi INTERFACE
         /MT)
     target_link_directories(MathOptSolversCMake_osi INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
