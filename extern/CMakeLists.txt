@@ -3,61 +3,6 @@ include(ExternalProject)
 
 # COIN-OR CLP/CBC
 
-add_library(MathOptSolversCMake_osi INTERFACE)
-if(UNIX AND NOT APPLE)
-    ExternalProject_Add(Osi
-        URL https://github.com/coin-or/Osi/releases/download/releases%2F0.108.8/Osi-releases.0.108.8-x86_64-ubuntu20-gcc940-static.tar.gz
-        URL_HASH SHA256=bd5a5bf1e6b6a28d13d41ab1554becd9f3992afe775785e51a88c9405cf2853e
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
-        INSTALL_COMMAND ""
-        TEST_COMMAND "")
-    target_include_directories(MathOptSolversCMake_osi INTERFACE
-        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
-    target_link_directories(MathOptSolversCMake_osi INTERFACE
-        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
-    target_link_libraries(MathOptSolversCMake_osi INTERFACE
-        libOsi.a
-        libOsiCommonTests.a)
-endif()
-if(APPLE)
-    ExternalProject_Add(Osi
-        URL https://github.com/coin-or/Osi/releases/download/releases%2F0.108.8/Osi-releases.0.108.8-x86_64-macos106-clang140.tar.gz
-        URL_HASH SHA256=4ddc1ee5cd5088aeb7795bfebc66beec8d7a0a3baec3dd3e8bbbdff17f93cd3f
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
-        INSTALL_COMMAND ""
-        TEST_COMMAND "")
-    target_include_directories(MathOptSolversCMake_osi INTERFACE
-        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
-    target_link_directories(MathOptSolversCMake_osi INTERFACE
-        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
-    target_link_libraries(MathOptSolversCMake_osi INTERFACE
-        libOsi.dylib
-        libOsiCommonTests.dylib)
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib/libOsi.dylib" DESTINATION lib)
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib/libOsiCommonTests.dylib" DESTINATION lib)
-endif()
-if(WIN32)
-    ExternalProject_Add(Osi
-        URL https://github.com/coin-or/Osi/releases/download/releases%2F0.108.8/Osi-releases.0.108.8-w64-msvc16-md.zip
-        URL_HASH SHA256=a61fc462cb598139d205cd2323522581a01900575d0d6bccf660b6c7e1b0b71c
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
-        INSTALL_COMMAND ""
-        TEST_COMMAND "")
-    target_include_directories(MathOptSolversCMake_osi INTERFACE
-        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
-    target_compile_options(MathOptSolversCMake_osi INTERFACE
-        /MD)
-    target_link_directories(MathOptSolversCMake_osi INTERFACE
-        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
-    target_link_libraries(MathOptSolversCMake_osi INTERFACE
-        libOsi.lib
-        libOsiCommonTests.lib)
-endif()
-add_library(MathOptSolversCMake::osi ALIAS MathOptSolversCMake_osi)
-
 add_library(MathOptSolversCMake_coinutils INTERFACE)
 if(UNIX AND NOT APPLE)
     ExternalProject_Add(CoinUtils
@@ -106,14 +51,67 @@ if(WIN32)
         TEST_COMMAND "")
     target_include_directories(MathOptSolversCMake_coinutils INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/include")
-    target_compile_options(MathOptSolversCMake_coinutils INTERFACE
-        /MD)
     target_link_directories(MathOptSolversCMake_coinutils INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/lib")
     target_link_libraries(MathOptSolversCMake_coinutils INTERFACE
         libCoinUtils.lib)
 endif()
 add_library(MathOptSolversCMake::coinutils ALIAS MathOptSolversCMake_coinutils)
+
+add_library(MathOptSolversCMake_osi INTERFACE)
+if(UNIX AND NOT APPLE)
+    ExternalProject_Add(Osi
+        URL https://github.com/coin-or/Osi/releases/download/releases%2F0.108.8/Osi-releases.0.108.8-x86_64-ubuntu20-gcc940-static.tar.gz
+        URL_HASH SHA256=bd5a5bf1e6b6a28d13d41ab1554becd9f3992afe775785e51a88c9405cf2853e
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND ""
+        TEST_COMMAND "")
+    target_include_directories(MathOptSolversCMake_osi INTERFACE
+        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
+    target_link_directories(MathOptSolversCMake_osi INTERFACE
+        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
+    target_link_libraries(MathOptSolversCMake_osi INTERFACE
+        libOsi.a
+        libOsiCommonTests.a)
+endif()
+if(APPLE)
+    ExternalProject_Add(Osi
+        URL https://github.com/coin-or/Osi/releases/download/releases%2F0.108.8/Osi-releases.0.108.8-x86_64-macos106-clang140.tar.gz
+        URL_HASH SHA256=4ddc1ee5cd5088aeb7795bfebc66beec8d7a0a3baec3dd3e8bbbdff17f93cd3f
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND ""
+        TEST_COMMAND "")
+    target_include_directories(MathOptSolversCMake_osi INTERFACE
+        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
+    target_link_directories(MathOptSolversCMake_osi INTERFACE
+        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
+    target_link_libraries(MathOptSolversCMake_osi INTERFACE
+        libOsi.dylib
+        libOsiCommonTests.dylib)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib/libOsi.dylib" DESTINATION lib)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib/libOsiCommonTests.dylib" DESTINATION lib)
+endif()
+if(WIN32)
+    ExternalProject_Add(Osi
+        URL https://github.com/coin-or/Osi/releases/download/releases%2F0.108.8/Osi-releases.0.108.8-w64-msvc16-md.zip
+        URL_HASH SHA256=a61fc462cb598139d205cd2323522581a01900575d0d6bccf660b6c7e1b0b71c
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND ""
+        TEST_COMMAND "")
+    target_include_directories(MathOptSolversCMake_osi INTERFACE
+        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
+    target_link_directories(MathOptSolversCMake_osi INTERFACE
+        "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
+    target_link_libraries(MathOptSolversCMake_osi INTERFACE
+        libOsi.lib
+        libOsiCommonTests.lib)
+endif()
+target_link_libraries(MathOptSolversCMake_osi INTERFACE
+    MathOptSolversCMake_coinutils)
+add_library(MathOptSolversCMake::osi ALIAS MathOptSolversCMake_osi)
 
 add_library(MathOptSolversCMake_clp INTERFACE)
 if(UNIX AND NOT APPLE)
@@ -167,8 +165,7 @@ if(WIN32)
         libOsiClp.lib)
 endif()
 target_link_libraries(MathOptSolversCMake_clp INTERFACE
-    MathOptSolversCMake_osi
-    MathOptSolversCMake_coinutils)
+    MathOptSolversCMake_osi)
 add_library(MathOptSolversCMake::clp ALIAS MathOptSolversCMake_clp)
 
 add_library(MathOptSolversCMake_cbc INTERFACE)
