@@ -1,13 +1,6 @@
 # Enable ExternalProject.
 include(ExternalProject)
 
-if(APPLE)
-    execute_process(COMMAND brew --prefix
-        OUTPUT_VARIABLE HOMEBREW_PREFIX
-        OUTPUT_STRIP_TRAILING_WHITESPACE)
-    message(HOMEBREW_PREFIX="${HOMEBREW_PREFIX}")
-endif()
-
 # COIN-OR CLP/CBC
 
 if(MATHOPTSOLVERSCMAKE_USE_CLP OR MATHOPTSOLVERSCMAKE_USE_CBC)
@@ -34,14 +27,19 @@ if(MATHOPTSOLVERSCMAKE_USE_CLP OR MATHOPTSOLVERSCMAKE_USE_CBC)
             libquadmath.a)
     endif()
     if(APPLE)
+        ExternalProject_Add(CoinUtils
+                URL https://github.com/fontanf/coinor-builds/releases/download/v0.1/CoinUtils-release.2.11.12-universal-macos.tar.gz
+                URL_HASH SHA256=8cd0b09e2eed185b5b37f81ef66554e0d41f29e9b5ea87b128538ce158fa6bfa
+                CONFIGURE_COMMAND ""
+                BUILD_COMMAND ""
+                INSTALL_COMMAND ""
+                TEST_COMMAND "")
         target_include_directories(MathOptSolversCMake_coinutils INTERFACE
-            "${HOMEBREW_PREFIX}/include/coinutils"
-            "${HOMEBREW_PREFIX}/include/coinutils/coin")
+            "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/include")
         target_link_directories(MathOptSolversCMake_coinutils INTERFACE
-            "${HOMEBREW_PREFIX}/lib")
+            "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/lib")
         target_link_libraries(MathOptSolversCMake_coinutils INTERFACE
-            libCoinUtils.dylib)
-        install(FILES "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/lib/libCoinUtils.dylib" DESTINATION lib)
+                libCoinUtils.a)
     endif()
     if(WIN32)
         ExternalProject_Add(CoinUtils
@@ -79,14 +77,20 @@ if(MATHOPTSOLVERSCMAKE_USE_CLP OR MATHOPTSOLVERSCMAKE_USE_CBC)
             libOsiCommonTests.a)
     endif()
     if(APPLE)
+        ExternalProject_Add(Osi
+                URL https://github.com/fontanf/coinor-builds/releases/download/v0.1/Osi-release.0.108.11-universal-macos.tar.gz
+                URL_HASH SHA256=fc6b7b93106e0d4d0d8eea1b2fb9f9db3c345580444409655133fc984391682b
+                CONFIGURE_COMMAND ""
+                BUILD_COMMAND ""
+                INSTALL_COMMAND ""
+                TEST_COMMAND "")
         target_include_directories(MathOptSolversCMake_osi INTERFACE
-            "${HOMEBREW_PREFIX}/include/osi"
-            "${HOMEBREW_PREFIX}/include/osi/coin")
+                "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
         target_link_directories(MathOptSolversCMake_osi INTERFACE
-            "${HOMEBREW_PREFIX}/lib")
+                "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
         target_link_libraries(MathOptSolversCMake_osi INTERFACE
-            libOsi.dylib
-            libOsiCommonTests.dylib)
+                libOsi.a
+                libOsiCommonTests.a)
     endif()
     if(WIN32)
         ExternalProject_Add(Osi
@@ -127,14 +131,20 @@ if(MATHOPTSOLVERSCMAKE_USE_CLP OR MATHOPTSOLVERSCMAKE_USE_CBC)
             libOsiClp.a)
     endif()
     if(APPLE)
+        ExternalProject_Add(Clp
+            URL https://github.com/fontanf/coinor-builds/releases/download/v0.1/Clp-release.1.17.10-universal-macos.tar.gz
+            URL_HASH SHA256=1179ae58b6d0fe827ff8933f72eed2a674273968d12e8125a93f5b03f9e8757b
+            CONFIGURE_COMMAND ""
+            BUILD_COMMAND ""
+            INSTALL_COMMAND ""
+            TEST_COMMAND "")
         target_include_directories(MathOptSolversCMake_clp INTERFACE
-            "${HOMEBREW_PREFIX}/include/clp"
-            "${HOMEBREW_PREFIX}/include/clp/coin")
+            "${CMAKE_CURRENT_BINARY_DIR}/Clp-prefix/src/Clp/include")
         target_link_directories(MathOptSolversCMake_clp INTERFACE
-            "${HOMEBREW_PREFIX}/lib")
+            "${CMAKE_CURRENT_BINARY_DIR}/Clp-prefix/src/Clp/lib")
         target_link_libraries(MathOptSolversCMake_clp INTERFACE
-            libClp.dylib
-            libOsiClp.dylib)
+            libClp.a
+            libOsiClp.a)
     endif()
     if(WIN32)
         ExternalProject_Add(Clp
@@ -179,15 +189,21 @@ if(MATHOPTSOLVERSCMAKE_USE_CBC)
             libnauty.a)
     endif()
     if(APPLE)
+        ExternalProject_Add(Cbc
+            URL https://github.com/fontanf/coinor-builds/releases/download/v0.1/Cbc-release.2.10.12-universal-macos.tar.gz
+            URL_HASH SHA256=501199f4d14f33555dedd6d233d7c51a097088edcef15b74d8304469e32ecade
+            CONFIGURE_COMMAND ""
+            BUILD_COMMAND ""
+            INSTALL_COMMAND ""
+            TEST_COMMAND "")
         target_include_directories(MathOptSolversCMake_cbc INTERFACE
-            "${HOMEBREW_PREFIX}/include/cbc"
-            "${HOMEBREW_PREFIX}/include/cbc/coin")
+            "${CMAKE_CURRENT_BINARY_DIR}/Cbc-prefix/src/Cbc/include")
         target_link_directories(MathOptSolversCMake_cbc INTERFACE
-            "${HOMEBREW_PREFIX}/lib")
+            "${CMAKE_CURRENT_BINARY_DIR}/Cbc-prefix/src/Cbc/lib")
         target_link_libraries(MathOptSolversCMake_cbc INTERFACE
-            libCbc.dylib
-            libOsiCbc.dylib
-            libCgl.dylib)
+            libCbc.a
+            libOsiCbc.a
+            libCgl.a)
     endif()
     if(WIN32)
         ExternalProject_Add(Cbc
