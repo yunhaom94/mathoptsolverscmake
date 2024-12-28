@@ -258,7 +258,7 @@ if(MATHOPTSOLVERSCMAKE_USE_CBC)
     if(APPLE)
         FetchContent_Declare(cbc
             URL https://github.com/fontanf/coinor-builds/releases/download/v0.1/Cbc-release.2.10.12-universal-macos.tar.gz
-            URL_HASH SHA256=501199f4d14f33555dedd6d233d7c51a097088edcef15b74d8304469e32ecade
+            URL_HASH SHA256=1bfbcf30a91561857b15b7b541daddd986007eb7b1bec66b1af3f39a0e139bc8
             CONFIGURE_COMMAND ""
             BUILD_COMMAND "")
         FetchContent_MakeAvailable(cbc)
