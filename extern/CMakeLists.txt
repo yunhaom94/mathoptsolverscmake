@@ -1,228 +1,319 @@
-# Enable ExternalProject.
-include(ExternalProject)
+# Enable FetchContent.
+include(FetchContent)
 
 # COIN-OR CLP/CBC
 
 if(MATHOPTSOLVERSCMAKE_USE_CLP OR MATHOPTSOLVERSCMAKE_USE_CBC)
-    add_library(MathOptSolversCMake_coinutils INTERFACE)
+
+    # CoinUtils
+
+    add_library(MathOptSolversCMake_coinutils STATIC IMPORTED GLOBAL)
+
     if(UNIX AND NOT APPLE)
-        ExternalProject_Add(CoinUtils
+        FetchContent_Declare(coinutils
             URL https://github.com/coin-or/CoinUtils/releases/download/releases%2F2.11.9/CoinUtils-releases.2.11.9-x86_64-ubuntu20-gcc940-static.tar.gz
             URL_HASH SHA256=14d07de1b7961f68e037da6f0c57844fd67d4cc1a4b125642f42cd134b228094
             CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ""
-            TEST_COMMAND "")
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(coinutils)
+
         target_include_directories(MathOptSolversCMake_coinutils INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/include")
-        target_link_directories(MathOptSolversCMake_coinutils INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/lib")
+            "${coinutils_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_coinutils PROPERTIES
+            IMPORTED_LOCATION "${coinutils_SOURCE_DIR}/lib/libCoinUtils.a")
+        find_package(LAPACK)
+        find_package(BLAS)
+        find_package(BZip2)
+        find_package(ZLIB)
         target_link_libraries(MathOptSolversCMake_coinutils INTERFACE
-            libCoinUtils.a
-            liblapack.a
-            libblas.a
-            libbz2.a
-            libz.a
-            libgfortran.a
-            libquadmath.a)
+            LAPACK::LAPACK
+            BLAS::BLAS
+            BZip2::BZip2
+            ZLIB::ZLIB)
     endif()
+
     if(APPLE)
-        ExternalProject_Add(CoinUtils
-                URL https://github.com/fontanf/coinor-builds/releases/download/v0.1/CoinUtils-release.2.11.12-universal-macos.tar.gz
-                URL_HASH SHA256=8cd0b09e2eed185b5b37f81ef66554e0d41f29e9b5ea87b128538ce158fa6bfa
-                CONFIGURE_COMMAND ""
-                BUILD_COMMAND ""
-                INSTALL_COMMAND ""
-                TEST_COMMAND "")
+        FetchContent_Declare(coinutils
+            URL https://github.com/fontanf/coinor-builds/releases/download/v0.1/CoinUtils-release.2.11.12-universal-macos.tar.gz
+            URL_HASH SHA256=8cd0b09e2eed185b5b37f81ef66554e0d41f29e9b5ea87b128538ce158fa6bfa
+            CONFIGURE_COMMAND ""
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(coinutils)
+
         target_include_directories(MathOptSolversCMake_coinutils INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/include")
-        target_link_directories(MathOptSolversCMake_coinutils INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/lib")
-        target_link_libraries(MathOptSolversCMake_coinutils INTERFACE
-                libCoinUtils.a)
+            "${coinutils_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_coinutils PROPERTIES
+            IMPORTED_LOCATION "${coinutils_SOURCE_DIR}/lib/libCoinUtils.a")
     endif()
+
     if(WIN32)
-        ExternalProject_Add(CoinUtils
+        FetchContent_Declare(coinutils
             URL https://github.com/coin-or/CoinUtils/releases/download/releases%2F2.11.9/CoinUtils-releases.2.11.9-w64-msvc16-md.zip
             URL_HASH SHA256=2bc64f0afd80113571697e949b2663e9047272decf90d5f62e452c2628d33ca6
             CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ""
-            TEST_COMMAND "")
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(coinUtils)
+
         target_include_directories(MathOptSolversCMake_coinutils INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/include")
-        target_link_directories(MathOptSolversCMake_coinutils INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/CoinUtils-prefix/src/CoinUtils/lib")
-        target_link_libraries(MathOptSolversCMake_coinutils INTERFACE
-            libCoinUtils.lib)
+            "${coinutils_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_coinutils PROPERTIES
+            IMPORTED_LOCATION "${coinutils_SOURCE_DIR}/lib/libCoinUtils.lib")
     endif()
-    add_dependencies(MathOptSolversCMake_coinutils CoinUtils)
+
+    add_dependencies(MathOptSolversCMake_coinutils coinutils)
     add_library(MathOptSolversCMake::coinutils ALIAS MathOptSolversCMake_coinutils)
 
-    add_library(MathOptSolversCMake_osi INTERFACE)
+    # Osi
+
+    add_library(MathOptSolversCMake_osi STATIC IMPORTED GLOBAL)
+
     if(UNIX AND NOT APPLE)
-        ExternalProject_Add(Osi
+        FetchContent_Declare(osi
             URL https://github.com/coin-or/Osi/releases/download/releases%2F0.108.8/Osi-releases.0.108.8-x86_64-ubuntu20-gcc940-static.tar.gz
             URL_HASH SHA256=bd5a5bf1e6b6a28d13d41ab1554becd9f3992afe775785e51a88c9405cf2853e
             CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ""
-            TEST_COMMAND "")
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(osi)
+
+        add_library(MathOptSolversCMake_osicommontests STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_osicommontests INTERFACE
+            "${osi_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_osicommontests PROPERTIES
+            IMPORTED_LOCATION "${osi_SOURCE_DIR}/lib/libOsiCommonTests.a")
+
         target_include_directories(MathOptSolversCMake_osi INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
+            "${osi_SOURCE_DIR}/include")
         target_link_directories(MathOptSolversCMake_osi INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
+            "${osi_SOURCE_DIR}/lib")
+        set_target_properties(MathOptSolversCMake_osi PROPERTIES
+            IMPORTED_LOCATION "${osi_SOURCE_DIR}/lib/libOsi.a")
         target_link_libraries(MathOptSolversCMake_osi INTERFACE
-            libOsi.a
-            libOsiCommonTests.a)
+            MathOptSolversCMake_osicommontests)
     endif()
+
     if(APPLE)
-        ExternalProject_Add(Osi
-                URL https://github.com/fontanf/coinor-builds/releases/download/v0.1/Osi-release.0.108.11-universal-macos.tar.gz
-                URL_HASH SHA256=fc6b7b93106e0d4d0d8eea1b2fb9f9db3c345580444409655133fc984391682b
-                CONFIGURE_COMMAND ""
-                BUILD_COMMAND ""
-                INSTALL_COMMAND ""
-                TEST_COMMAND "")
+        FetchContent_Declare(osi
+            URL https://github.com/fontanf/coinor-builds/releases/download/v0.1/Osi-release.0.108.11-universal-macos.tar.gz
+            URL_HASH SHA256=fc6b7b93106e0d4d0d8eea1b2fb9f9db3c345580444409655133fc984391682b
+            CONFIGURE_COMMAND ""
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(osi)
+
+        add_library(MathOptSolversCMake_osicommontests STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_osicommontests INTERFACE
+            "${osi_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_osicommontests PROPERTIES
+            IMPORTED_LOCATION "${osi_SOURCE_DIR}/lib/libOsiCommonTests.a")
+
         target_include_directories(MathOptSolversCMake_osi INTERFACE
-                "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
+            "${osi_SOURCE_DIR}/include")
         target_link_directories(MathOptSolversCMake_osi INTERFACE
-                "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
+            "${osi_SOURCE_DIR}/lib")
+        set_target_properties(MathOptSolversCMake_osi PROPERTIES
+            IMPORTED_LOCATION "${osi_SOURCE_DIR}/lib/libOsi.a")
         target_link_libraries(MathOptSolversCMake_osi INTERFACE
-                libOsi.a
-                libOsiCommonTests.a)
+            MathOptSolversCMake_osicommontests)
     endif()
+
     if(WIN32)
-        ExternalProject_Add(Osi
+        FetchContent_Declare(osi
             URL https://github.com/coin-or/Osi/releases/download/releases%2F0.108.8/Osi-releases.0.108.8-w64-msvc16-md.zip
             URL_HASH SHA256=a61fc462cb598139d205cd2323522581a01900575d0d6bccf660b6c7e1b0b71c
             CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ""
-            TEST_COMMAND "")
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(osi)
+
+        add_library(MathOptSolversCMake_osicommontests STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_osicommontests INTERFACE
+            "${osi_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_osicommontests PROPERTIES
+            IMPORTED_LOCATION "${osi_SOURCE_DIR}/lib/libOsiCommonTests.lib")
+
         target_include_directories(MathOptSolversCMake_osi INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/include")
+            "${osi_SOURCE_DIR}/include")
         target_link_directories(MathOptSolversCMake_osi INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Osi-prefix/src/Osi/lib")
+            "${osi_SOURCE_DIR}/lib")
+        set_target_properties(MathOptSolversCMake_osi PROPERTIES
+            IMPORTED_LOCATION "${osi_SOURCE_DIR}/lib/libOsi.lib")
         target_link_libraries(MathOptSolversCMake_osi INTERFACE
-            libOsi.lib
-            libOsiCommonTests.lib)
+            MathOptSolversCMake_osicommontests)
     endif()
-    add_dependencies(MathOptSolversCMake_osi Osi)
+
+    add_dependencies(MathOptSolversCMake_osi osi)
     target_link_libraries(MathOptSolversCMake_osi INTERFACE
         MathOptSolversCMake_coinutils)
     add_library(MathOptSolversCMake::osi ALIAS MathOptSolversCMake_osi)
 
-    add_library(MathOptSolversCMake_clp INTERFACE)
+    # Clp
+
+    add_library(MathOptSolversCMake_clp STATIC IMPORTED GLOBAL)
     if(UNIX AND NOT APPLE)
-        ExternalProject_Add(Clp
+        FetchContent_Declare(clp
             URL https://github.com/coin-or/Clp/releases/download/releases%2F1.17.8/Clp-releases.1.17.8-x86_64-ubuntu20-gcc940-static.tar.gz
             URL_HASH SHA256=d569b04d19c25876e55d2557a1d9739df8eb50ec8ca11a98ad387fd8b90212c9
             CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ""
-            TEST_COMMAND "")
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(clp)
+
+        add_library(MathOptSolversCMake_osiclp STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_osiclp INTERFACE
+            "${clp_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_osiclp PROPERTIES
+            IMPORTED_LOCATION "${clp_SOURCE_DIR}/lib/libOsiClp.a")
+
         target_include_directories(MathOptSolversCMake_clp INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Clp-prefix/src/Clp/include")
-        target_link_directories(MathOptSolversCMake_clp INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Clp-prefix/src/Clp/lib")
+            "${clp_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_clp PROPERTIES
+            IMPORTED_LOCATION "${clp_SOURCE_DIR}/lib/libClp.a")
         target_link_libraries(MathOptSolversCMake_clp INTERFACE
-            libClp.a
-            libOsiClp.a)
+            MathOptSolversCMake_osiclp)
     endif()
+
     if(APPLE)
-        ExternalProject_Add(Clp
+        FetchContent_Declare(clp
             URL https://github.com/fontanf/coinor-builds/releases/download/v0.1/Clp-release.1.17.10-universal-macos.tar.gz
             URL_HASH SHA256=1179ae58b6d0fe827ff8933f72eed2a674273968d12e8125a93f5b03f9e8757b
             CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ""
-            TEST_COMMAND "")
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(clp)
+
+        add_library(MathOptSolversCMake_osiclp STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_osiclp INTERFACE
+            "${clp_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_osiclp PROPERTIES
+            IMPORTED_LOCATION "${clp_SOURCE_DIR}/lib/libOsiClp.a")
+
         target_include_directories(MathOptSolversCMake_clp INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Clp-prefix/src/Clp/include")
-        target_link_directories(MathOptSolversCMake_clp INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Clp-prefix/src/Clp/lib")
+            "${clp_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_clp PROPERTIES
+            IMPORTED_LOCATION "${clp_SOURCE_DIR}/lib/libClp.a")
         target_link_libraries(MathOptSolversCMake_clp INTERFACE
-            libClp.a
-            libOsiClp.a)
+            MathOptSolversCMake_osiclp)
     endif()
+
     if(WIN32)
-        ExternalProject_Add(Clp
+        FetchContent_Declare(clp
             URL https://github.com/coin-or/Clp/releases/download/releases%2F1.17.8/Clp-releases.1.17.8-w64-msvc16-md.zip
             URL_HASH SHA256=e37c834aea5c31dfd8620b7d2432cb31fc16ecb0c6ffb398e8f07c9c82dd5028
             CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ""
-            TEST_COMMAND "")
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(clp)
+
+        add_library(MathOptSolversCMake_osiclp STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_osiclp INTERFACE
+            "${clp_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_osiclp PROPERTIES
+            IMPORTED_LOCATION "${clp_SOURCE_DIR}/lib/libOsiClp.lib")
+
         target_include_directories(MathOptSolversCMake_clp INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Clp-prefix/src/Clp/include")
-        target_link_directories(MathOptSolversCMake_clp INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Clp-prefix/src/Clp/lib")
+            "${clp_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_clp PROPERTIES
+            IMPORTED_LOCATION "${clp_SOURCE_DIR}/lib/libClp.lib")
         target_link_libraries(MathOptSolversCMake_clp INTERFACE
-            libClp.lib
-            libOsiClp.lib)
+            MathOptSolversCMake_osiclp)
     endif()
-    add_dependencies(MathOptSolversCMake_clp Clp)
+
+    add_dependencies(MathOptSolversCMake_clp clp)
     target_link_libraries(MathOptSolversCMake_clp INTERFACE
         MathOptSolversCMake_osi)
     add_library(MathOptSolversCMake::clp ALIAS MathOptSolversCMake_clp)
 endif()
 
+# Cbc
+
 if(MATHOPTSOLVERSCMAKE_USE_CBC)
-    add_library(MathOptSolversCMake_cbc INTERFACE)
+
+    add_library(MathOptSolversCMake_cbc STATIC IMPORTED GLOBAL)
+
     if(UNIX AND NOT APPLE)
-        ExternalProject_Add(Cbc
+        FetchContent_Declare(cbc
             URL https://github.com/coin-or/Cbc/releases/download/releases%2F2.10.10/Cbc-releases.2.10.10-x86_64-ubuntu20-gcc940-static.tar.gz
             URL_HASH SHA256=872c78bfcdd1566f134d2f7757b76b2a2479a5b1ade065cdd1d4b303ed6f8006
             CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ""
-            TEST_COMMAND "")
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(cbc)
+
+        add_library(MathOptSolversCMake_osicbc STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_osicbc INTERFACE
+            "${osi_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_osicbc PROPERTIES
+            IMPORTED_LOCATION "${cbc_SOURCE_DIR}/lib/libOsiCbc.a")
+
+        add_library(MathOptSolversCMake_cgl STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_cgl INTERFACE
+            "${osi_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_cgl PROPERTIES
+            IMPORTED_LOCATION "${cbc_SOURCE_DIR}/lib/libCgl.a")
+
         target_include_directories(MathOptSolversCMake_cbc INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Cbc-prefix/src/Cbc/include")
-        target_link_directories(MathOptSolversCMake_cbc INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Cbc-prefix/src/Cbc/lib")
+            "${cbc_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_cbc PROPERTIES
+            IMPORTED_LOCATION "${cbc_SOURCE_DIR}/lib/libCbc.a")
         target_link_libraries(MathOptSolversCMake_cbc INTERFACE
-            libCbc.a
-            libOsiCbc.a
-            libCgl.a
-            libnauty.a)
+            nauty
+            MathOptSolversCMake_osicbc
+            MathOptSolversCMake_cgl)
     endif()
+
     if(APPLE)
-        ExternalProject_Add(Cbc
+        FetchContent_Declare(cbc
             URL https://github.com/fontanf/coinor-builds/releases/download/v0.1/Cbc-release.2.10.12-universal-macos.tar.gz
             URL_HASH SHA256=501199f4d14f33555dedd6d233d7c51a097088edcef15b74d8304469e32ecade
             CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ""
-            TEST_COMMAND "")
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(cbc)
+
+        add_library(MathOptSolversCMake_osicbc STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_osicbc INTERFACE
+            "${osi_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_osicbc PROPERTIES
+            IMPORTED_LOCATION "${cbc_SOURCE_DIR}/lib/libOsiCbc.a")
+
+        add_library(MathOptSolversCMake_cgl STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_cgl INTERFACE
+            "${osi_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_cgl PROPERTIES
+            IMPORTED_LOCATION "${cbc_SOURCE_DIR}/lib/libCgl.a")
+
         target_include_directories(MathOptSolversCMake_cbc INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Cbc-prefix/src/Cbc/include")
-        target_link_directories(MathOptSolversCMake_cbc INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Cbc-prefix/src/Cbc/lib")
+            "${cbc_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_cbc PROPERTIES
+            IMPORTED_LOCATION "${cbc_SOURCE_DIR}/lib/libCbc.a")
         target_link_libraries(MathOptSolversCMake_cbc INTERFACE
-            libCbc.a
-            libOsiCbc.a
-            libCgl.a)
+            MathOptSolversCMake_osicbc
+            MathOptSolversCMake_cgl)
     endif()
+
     if(WIN32)
-        ExternalProject_Add(Cbc
+        FetchContent_Declare(cbc
             URL https://github.com/coin-or/Cbc/releases/download/releases%2F2.10.10/Cbc-releases.2.10.10-w64-msvc16-md.zip
             URL_HASH SHA256=94a951904eb80c2f351785fc9340216e88970a716634bc1ccd8b4fc5024af37c
             CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ""
-            TEST_COMMAND "")
+            BUILD_COMMAND "")
+        FetchContent_MakeAvailable(cbc)
+
+        add_library(MathOptSolversCMake_osicbc STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_osicbc INTERFACE
+            "${osi_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_osicbc PROPERTIES
+            IMPORTED_LOCATION "${cbc_SOURCE_DIR}/lib/libOsiCbc.lib")
+
+        add_library(MathOptSolversCMake_cgl STATIC IMPORTED GLOBAL)
+        target_include_directories(MathOptSolversCMake_cgl INTERFACE
+            "${osi_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_cgl PROPERTIES
+            IMPORTED_LOCATION "${cbc_SOURCE_DIR}/lib/libCgl.lib")
+
         target_include_directories(MathOptSolversCMake_cbc INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Cbc-prefix/src/Cbc/include")
-        target_link_directories(MathOptSolversCMake_cbc INTERFACE
-            "${CMAKE_CURRENT_BINARY_DIR}/Cbc-prefix/src/Cbc/lib")
+            "${cbc_SOURCE_DIR}/include")
+        set_target_properties(MathOptSolversCMake_cbc PROPERTIES
+            IMPORTED_LOCATION "${cbc_SOURCE_DIR}/lib/libCbc.lib")
         target_link_libraries(MathOptSolversCMake_cbc INTERFACE
-            libCbc.lib
-            libOsiCbc.lib
-            libCgl.lib)
+            MathOptSolversCMake_osicbc
+            MathOptSolversCMake_cgl)
     endif()
-    add_dependencies(MathOptSolversCMake_cbc Cbc)
+
+    add_dependencies(MathOptSolversCMake_cbc cbc)
     target_link_libraries(MathOptSolversCMake_cbc INTERFACE
         MathOptSolversCMake_clp)
     add_library(MathOptSolversCMake::cbc ALIAS MathOptSolversCMake_cbc)
