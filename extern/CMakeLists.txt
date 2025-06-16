@@ -223,7 +223,7 @@ endif()
 
 if(MATHOPTSOLVERSCMAKE_USE_CBC)
 
-    add_library(MathOptSolversCMake_cbc STATIC IMPORTED GLOBAL)
+    add_library(MathOptSolversCMake_cbc SHARED IMPORTED GLOBAL)
 
     if(UNIX AND NOT APPLE)
         FetchContent_Declare(cbc
